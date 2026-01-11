@@ -13,6 +13,7 @@ class ProductController extends Controller
     /**
      * عرض قائمة جميع المنتجات في المتجر
      * يعرض 20 منتج في الصفحة مع تقسيمها إلى كروت جميلة
+     * ترتيب الكروت حسب رقم الكتاب (ID) تصاعدي
      */
    public function index()
 {
@@ -20,6 +21,7 @@ class ProductController extends Controller
     $products = Product::query()
         ->whereRaw('is_active IS TRUE')
         ->whereRaw('is_rejected IS FALSE')
+        ->orderBy('id', 'asc')
         ->paginate(20);
 
     return view('products.index', compact('products')); // أو اسم الـ View عندك
@@ -65,7 +67,8 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|numeric',
-            'image' => 'required|image',
+            'image' => 'nullable|image',
+            'image_url' => 'nullable|url',
         ]);
 
         // 2. إنشاء كائن جديد مع تحويل صريح للبوليان
@@ -78,10 +81,13 @@ class ProductController extends Controller
         $product->is_active = $request->boolean('is_active');
         $product->is_rejected = $request->boolean('is_rejected');
 
-        // معالجة الصورة
+        // معالجة الصورة أو رابط الصورة
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
             $product->image = $imagePath;
+            $product->image_url = null;
+        } elseif ($request->filled('image_url')) {
+            $product->image_url = $request->input('image_url');
         }
 
         // 3. الحفظ

@@ -107,6 +107,7 @@ class AdminController extends Controller
             'price' => 'required|numeric',
             'stock' => 'required|numeric',
             'image' => 'nullable|image',
+            'image_url' => 'nullable|url',
             'is_active' => 'nullable|boolean',
             'is_rejected' => 'nullable|boolean',
         ]);
@@ -124,9 +125,12 @@ class AdminController extends Controller
         $product->is_active = $request->has('is_active') ? 'true' : 'false';
         $product->is_rejected = $request->has('is_rejected') ? 'true' : 'false';
 
-        // رفع الصورة
+        // رفع الصورة أو استخدام رابط صورة
         if ($request->hasFile('image')) {
             $product->image = $request->file('image')->store('products', 'public');
+            $product->image_url = null; // في حال وُجدت صورة مرفوعة، نلغي رابط الصورة
+        } elseif ($request->filled('image_url')) {
+            $product->image_url = $request->input('image_url');
         }
 
         // 3. الحفظ
@@ -156,6 +160,7 @@ class AdminController extends Controller
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_url' => 'nullable|url',
             'is_active' => 'nullable|boolean',
             'is_rejected' => 'nullable|boolean',
         ]);
@@ -171,6 +176,9 @@ class AdminController extends Controller
                 Storage::disk('public')->delete($product->image);
             }
             $data['image'] = $request->file('image')->store('products', 'public');
+            $data['image_url'] = null;
+        } elseif ($request->filled('image_url')) {
+            $data['image_url'] = $request->input('image_url');
         }
 
         // تحديث بيانات المنتج

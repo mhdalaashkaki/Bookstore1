@@ -82,12 +82,17 @@ class ProductSeeder extends Seeder
         $description = $descTexts[$locale] ?? $descTexts['en'];
 
         foreach ($books as $bookData) {
+            // توليد رابط صورة افتراضي لكل كتاب
+            $nameText = urlencode($bookData['name']);
+            $imageUrl = "https://placehold.co/400x600?text={$nameText}";
+
             DB::table('products')->insert([
                 'name' => $bookData['name'],
                 'short_description' => $shortDescription,
                 'description' => $description,
                 'price' => $bookData['price'],
                 'image' => null,
+                'image_url' => $imageUrl,
                 'stock' => $bookData['stock'],
                 'is_active' => DB::raw("'true'::boolean"),
                 'is_rejected' => DB::raw("'false'::boolean"),

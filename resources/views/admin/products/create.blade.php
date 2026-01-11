@@ -39,6 +39,12 @@
             <input type="file" name="image" accept="image/*">
         </div>
 
+        <div style="margin-bottom: 1rem;">
+            <label style="display:block; margin-bottom: .3rem; color: #2c3e50; font-weight: bold;">Image URL (اختياري)</label>
+            <input type="url" name="image_url" value="{{ old('image_url') }}" placeholder="https://placehold.co/400x600?text=Book+Cover" style="width:100%; padding:.6rem; border:1px solid #ddd; border-radius:6px;">
+            <small style="color:#666;">إذا لم ترفع صورة، سيتم استخدام الرابط.</small>
+        </div>
+
         <div style="margin-bottom: 1.5rem; display:flex; align-items:center; gap:.5rem;">
             <input type="hidden" name="is_active" value="0">
             <input type="checkbox" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }}>

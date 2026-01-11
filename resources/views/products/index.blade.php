@@ -491,8 +491,10 @@
                     <div class="product-image">
                         @if($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                        @elseif($product->image_url)
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                         @else
-                            📖
+                            <img src="https://placehold.co/400x600?text=Book+Cover" alt="{{ $product->name }}">
                         @endif
                         @if($product->stock > 0)
                             @if($product->stock < 5)

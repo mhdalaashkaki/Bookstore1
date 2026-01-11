@@ -167,8 +167,10 @@
             <div class="product-image-large">
                 @if($product->image)
                     <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                @elseif($product->image_url)
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                 @else
-                    📖
+                    <img src="https://placehold.co/400x600?text=Book+Cover" alt="{{ $product->name }}">
                 @endif
             </div>
 
